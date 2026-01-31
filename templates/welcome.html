@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='welcome.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="welcome-container">
+  <div class="welcome-box">
+    <h2 class="welcome-subtitle">Hello,</h2>
+    <h1 class="welcome-title">{{ name }} 👋</h1>
+    <p class="welcome-intro">Choose your semester:</p>
+
+    <!-- ✅ Semester blocks now stack vertically and take full width -->
+    <div class="semester-list">
+      {% for s in semesters %}
+      <a href="{{ url_for('semester_page', sem_id=s) }}" class="semester-block">
+        <div class="semester-number">Semester {{ s }}</div>
+        <div class="semester-desc">View subjects & downloads</div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% if is_admin %}
+    <div class="manage-link">
+      Need to upload/update PDFs? <a class="manage-btn" href="{{ url_for('manage') }}">Open Manage</a>
+    </div>
+    {% endif %}
+
+    <!-- ✅ Full-width Back Button at the bottom -->
+    <div class="back-button" style="margin-top: 30px;">
+      <a class="back-btn" href="{{ url_for('landing') }}">← Back</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

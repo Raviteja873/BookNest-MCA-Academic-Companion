@@ -1,0 +1,179 @@
+/* ---------- Manage Page Styles (Final Updated Version) ---------- */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #000000;
+  color: #E5E5E5;
+  margin: 0;
+  padding: 0;
+}
+
+.manage-container {
+  max-width: 800px;
+  margin: 60px auto;
+  background: #14213D;
+  border: 2px solid #FCA311;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.6);
+}
+
+.manage-container h1 {
+  color: #FCA311;
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ---------- Form Layout ---------- */
+.manage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.manage-field label {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #FFFFFF;
+}
+
+/* Consistent field sizing */
+:root {
+  --field-height: 54px; /* control overall field height */
+}
+
+/* ---------- Select Dropdown ---------- */
+.manage-form select {
+  width: 100%;
+  min-height: var(--field-height);
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid #FCA311;
+  background: #000000;
+  color: #E5E5E5;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.manage-form select:focus {
+  box-shadow: 0 0 8px #FCA311;
+  border-color: #FCA311;
+}
+
+/* ---------- File Input (with top/bottom padding gap) ---------- */
+.manage-form input[type="file"] {
+  width: 100%;
+  min-height: var(--field-height);
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #FCA311;
+  background: #000000;
+  color: #E5E5E5;
+  /* create internal gap so the button doesn't touch borders */
+  padding: 10px 16px;          /* ⬅️ vertical + horizontal padding inside box */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+/* Choose File button */
+.manage-form input[type="file"]::file-selector-button {
+  background: #FCA311;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;          /* ⬅️ vertical padding inside the button */
+  margin-right: 20px;          /* space between button and filename */
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.manage-form input[type="file"]::file-selector-button:hover {
+  background: #ffb739;
+  transform: translateY(-1px);
+}
+
+/* Safari fallback */
+.manage-form input[type="file"]::-webkit-file-upload-button {
+  background: #FCA311;
+  color: #000000;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;          /* ⬅️ same vertical padding for Safari */
+  margin-right: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.manage-form input[type="file"]::-webkit-file-upload-button:hover {
+  background: #ffb739;
+  transform: translateY(-1px);
+}
+
+/* ---------- Upload Button ---------- */
+.manage-form button,
+.manage-submit {
+  width: 100%;
+  min-height: var(--field-height);
+  padding: 0 16px;
+  background: #FCA311;
+  color: #000000;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.manage-form button:hover,
+.manage-submit:hover {
+  background: #ffb739;
+  transform: translateY(-2px);
+}
+
+/* ---------- Tip Text ---------- */
+.tip-text {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-top: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+/* ---------- Full-width Back Button ---------- */
+.back-button {
+  margin-top: 24px;
+}
+
+.back-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #14213D;
+  color: #E5E5E5;
+  border: 1px solid #FCA311;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.back-btn:hover {
+  background: #FCA311;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .manage-container { padding: 22px; }
+}

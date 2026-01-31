@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="login-page">
+
+  <!-- 🖼️ Image on top -->
+  <div class="login-top-image">
+    <!-- Put your image in /static and update the filename if needed -->
+    <img src="{{ url_for('static', filename='edit(MCA).jpg') }}" alt="GVPCE Campus">
+  </div>
+
+  <!-- 📄 Form below -->
+  <div class="login-form-section">
+    <h1>Welcome 👋</h1>
+    <p>Enter your details to access MCA textbooks. Only institute emails are accepted.</p>
+
+    <form method="post" class="form-fields">
+      <div class="input-group">
+        <label for="name">Your Name</label>
+        <input required id="name" name="name" type="text" placeholder="e.g., Ravi Teja">
+      </div>
+
+      <div class="input-group">
+        <label for="email">Institute Email</label>
+        <input
+          required
+          id="email"
+          name="email"
+          type="email"
+          placeholder="name{{ allowed_domain }}"
+          oninput="checkDomain(this, '{{ allowed_domain }}')"
+        >
+        <div id="domain-hint">Use your institute email ({{ allowed_domain }})</div>
+      </div>
+
+      <button type="submit" class="btn-submit">Continue</button>
+    </form>
+  </div>
+
+</section>
+{% endblock %}

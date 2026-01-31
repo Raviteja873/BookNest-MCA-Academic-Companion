@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='subjects.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="subjects-container">
+  <div class="subjects-header">
+    <h1>Semester {{ sem }}</h1>
+  </div>
+
+  <p class="subjects-intro">Hi {{ name }}, click download to get the PDF (if available).</p>
+
+  <ul class="subjects-list">
+    {% for d in docs %}
+    <li class="subject-card">
+      <div class="subject-info">
+        <h2>{{ d.subject }}</h2>
+        <p>
+          {% if d.has_pdf() %}
+            {{ d.filename or 'PDF available' }} • updated {{ d.updated_at.strftime('%Y-%m-%d %H:%M') if d.updated_at else '—' }}
+          {% else %}
+            No PDF uploaded yet
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="subject-actions">
+        {% if d.has_pdf() %}
+          <a href="{{ url_for('download', doc_id=d.id) }}" class="download-btn">Download</a>
+        {% else %}
+          <button class="download-btn" disabled>Download</button>
+        {% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <!-- ✅ Full-width Back Button at the bottom -->
+  <div class="back-button">
+    <a class="back-btn" href="{{ url_for('welcome') }}">← Back</a>
+  </div>
+</section>
+{% endblock %}

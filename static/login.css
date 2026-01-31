@@ -1,0 +1,131 @@
+/* ---------- Login Page Styles (Dark Navy + Orange, Modern) ---------- */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #000000;
+  color: #E5E5E5;
+  margin: 0;
+  padding: 0;
+}
+
+.login-page {
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
+  background: #14213D;               /* dark navy container */
+  border: 2px solid #FCA311;         /* orange accent border */
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* 🖼️ Top Image */
+.login-top-image {
+  width: 100%;
+  background: #fff;               /* black header area behind image */
+  padding: 20px 0;
+}
+
+.login-top-image img {
+  width: 70%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .login-top-image img {
+    width: 60%;
+    max-width: 200px;
+  }
+}
+
+/* 📄 Form Section */
+.login-form-section {
+  padding: 30px 40px;
+}
+
+.login-form-section h1 {
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+  color: #FCA311;                    /* orange heading */
+}
+
+.login-form-section p {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 25px;
+  color: #E5E5E5;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group label {
+  font-size: 1rem;
+  margin-bottom: 6px;
+  text-align: left;
+  display: block;
+  color: #FFFFFF;
+}
+
+.input-group input {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid #FCA311;         /* orange border */
+  background: #000000;               /* black input bg to match theme */
+  color: #E5E5E5;                    /* light text */
+  outline: none;
+  font-size: 1rem;
+  transition: 0.3s;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #BFBFBF;                    /* softer placeholder */
+}
+
+.input-group input:focus {
+  border-color: #FCA311;
+  box-shadow: 0 0 8px #FCA311;
+}
+
+#domain-hint {
+  font-size: 0.85rem;
+  margin-top: 6px;
+  color: #FCA311;
+}
+
+/* CTA Button */
+.btn-submit {
+  padding: 14px;
+  background: #FCA311;               /* orange button */
+  color: #000000;                     /* black text for contrast */
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 46px;
+}
+
+.btn-submit:hover {
+  background: #ffb739;               /* lighter orange on hover */
+  transform: translateY(-2px);
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .login-page { margin: 36px auto; }
+  .login-form-section { padding: 24px; }
+}

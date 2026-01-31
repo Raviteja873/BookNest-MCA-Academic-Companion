@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookNest • MCA</title>
+
+  <!-- Tailwind for layout utilities (kept neutral) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Page-specific styles will be injected here -->
+  {% block head %}{% endblock %}
+</head>
+
+<!-- Neutral body. Colors come from each page's own CSS -->
+<body class="min-h-screen" style="font-family: 'Poppins', sans-serif; background:#f9fafb; color:#000;">
+  <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="text-xl font-semibold tracking-wide" style="color:#FCA311"></div>
+    <div class="text-sm opacity-70">
+      {% if session.get('user_email') %}
+      Signed in as <span class="font-medium">{{ session['user_email'] }}</span>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main class="container mx-auto px-4 pb-24">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-2 mb-6">
+          {% for category, message in messages %}
+            <div
+              class="rounded-xl px-4 py-3 text-sm border"
+              style="
+                background:#14213D;
+                border-color:#FCA311;
+                color:#E5E5E5;
+              ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="container mx-auto px-4 pb-10 text-center text-xs opacity-60">
+    © {{ 2025 }} BookNest • GVPCE MCA
+  </footer>
+
+  <script>
+  // Small helper: email domain check on the client too
+  function checkDomain(el, allowed) {
+    const v = (el.value || '').toLowerCase();
+    const ok = v.endsWith(allowed);
+    const hint = document.getElementById('domain-hint');
+    if (hint) {
+      hint.textContent = ok ? 'Looks good ✅' : `Use institute email ending with ${allowed}`;
+      // Avoid Tailwind color classes; keep neutral
+      hint.style.color = ok ? '#FCA311' : '#FCA311';
+      hint.style.opacity = ok ? '1' : '0.9';
+    }
+  }
+  </script>
+</body>
+</html>

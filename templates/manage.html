@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='manage.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="manage-container">
+  <h1>Manage PDFs</h1>
+
+  <form method="post" enctype="multipart/form-data" class="manage-form">
+    <!-- Subject dropdown -->
+    <div class="manage-field">
+      <label for="subject">Subject</label>
+      <select id="subject" name="subject" required>
+        {% for sem, docs in grouped %}
+          <optgroup label="Semester {{ sem }}">
+            {% for d in docs %}
+            <option value="{{ d.subject }}">{{ d.subject }}</option>
+            {% endfor %}
+          </optgroup>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- File input -->
+    <div class="manage-field">
+      <label for="file">PDF File</label>
+      <input id="file" type="file" name="file" accept="application/pdf" required>
+    </div>
+
+    <!-- Submit button (same visual height as inputs) -->
+    <button type="submit" class="manage-submit">Upload / Update</button>
+  </form>
+
+  <div class="tip-text">
+    Tip: After uploading, go to the semester page and click Download to verify the PDF.
+  </div>
+
+  <!-- Full-width Back button at the bottom -->
+  <div class="back-button" style="margin-top:24px;">
+    <a class="back-btn" href="{{ url_for('welcome') }}">← Back</a>
+  </div>
+</section>
+{% endblock %}

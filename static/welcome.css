@@ -1,0 +1,138 @@
+/* ---------- Welcome Page Styles ---------- */
+body {
+  font-family: "Poppins", sans-serif;
+  background: #000000;
+  color: #E5E5E5;
+  margin: 0;
+  padding: 0;
+}
+
+.welcome-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+.welcome-box {
+  background: #14213D;
+  border: 1px solid #FCA311;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.welcome-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  color: #fff;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FCA311;
+  margin-bottom: 20px;
+}
+
+.welcome-intro {
+  font-size: 1.2rem;
+  opacity: 0.85;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+/* ✅ Semester blocks - vertical full-width */
+.semester-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.semester-block {
+  display: block;
+  width: 100%;
+  background: #1a2c52;
+  border: 1px solid #FCA311;
+  padding: 30px 20px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.semester-block:hover {
+  background: #FCA311;
+  color: #000000;
+  transform: translateY(-4px);
+}
+
+.semester-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #FFFFFF;
+}
+
+.semester-desc {
+  font-size: 1rem;
+  opacity: 0.85;
+  color: #fff;
+}
+
+/* ---------- Admin Section ---------- */
+.manage-link {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 1rem;
+  opacity: 0.85;
+  color: #fff;
+}
+
+.manage-btn {
+  color: #FCA311;
+  text-decoration: underline;
+}
+
+.manage-btn:hover {
+  color: #ffb739;
+}
+
+/* ---------- Full-width Back Button ---------- */
+.back-button {
+  margin-top: 40px;
+}
+
+.back-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #14213D;
+  color: #E5E5E5;
+  border: 1px solid #FCA311;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.back-btn:hover {
+  background: #FCA311;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .welcome-container {
+    padding: 16px;
+  }
+  .welcome-box {
+    padding: 24px;
+  }
+  .semester-block {
+    padding: 24px 16px;
+  }
+}

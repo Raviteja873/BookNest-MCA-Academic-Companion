@@ -4,9 +4,18 @@ from datetime import datetime
 import io
 import os
 
+# -----------------------
+# App Config
+# -----------------------
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+# ✅ ABSOLUTE SQLITE PATH (RENDER SAFE)
+basedir = os.path.abspath(os.path.dirname(__file__))
+db_path = os.path.join(basedir, "database.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -15,18 +24,16 @@ db = SQLAlchemy(app)
 # Admin / Domain
 # -----------------------
 ALLOWED_DOMAIN = "@gvpce.ac.in"
-ADMIN_EMAIL = "ravitejadasari873@gmail.com"  # remembers admin mail
+ADMIN_EMAIL = "ravitejadasari873@gmail.com"
 
 def valid_domain_mail(email: str) -> bool:
-    """Allow institute emails or the one admin Gmail."""
     if not isinstance(email, str):
         return False
-    e = email.strip().lower()
-    return e.endswith(ALLOWED_DOMAIN) or e == ADMIN_EMAIL
+    email = email.strip().lower()
+    return email.endswith(ALLOWED_DOMAIN) or email == ADMIN_EMAIL
 
 def is_admin() -> bool:
-    """Check whether the current session user is the admin."""
-    return (session.get("user_email") or "").strip().lower() == ADMIN_EMAIL
+    return (session.get("user_email") or "").lower() == ADMIN_EMAIL
 
 # -----------------------
 # Models
@@ -36,16 +43,16 @@ class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     semester = db.Column(db.Integer, nullable=False)
     subject = db.Column(db.String(120), unique=True, nullable=False)
-    filename = db.Column(db.String(255), nullable=True)
-    data = db.Column(db.LargeBinary, nullable=True)
-    mimetype = db.Column(db.String(100), default='application/pdf')
+    filename = db.Column(db.String(255))
+    data = db.Column(db.LargeBinary)
+    mimetype = db.Column(db.String(100), default="application/pdf")
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def has_pdf(self):
         return self.data is not None and len(self.data) > 0
 
 # -----------------------
-# Constants (updated)
+# Semester Data
 # -----------------------
 SEMESTERS = {
     1: [
@@ -53,8 +60,7 @@ SEMESTERS = {
         "Introduction to Python Programming",
         "Computer Organization",
         "Operating Systems",
-        "Mathematical Foundations of Computer Applications",
-        
+        "Mathematical Foundations of Computer Applications"
     ],
     2: [
         "Data Base Management Systems",
@@ -63,7 +69,7 @@ SEMESTERS = {
         "E-commerce",
         "Artificial Intelligence",
         "Organizational Structural Human Resource Management",
-        "Fundamentals of Data Science",  # ADDED
+        "Fundamentals of Data Science"
     ],
     3: [
         "Web Technologies & Services",
@@ -72,7 +78,7 @@ SEMESTERS = {
         "Introduction to Machine Learning",
         "Management Information Systems",
         "Big Data Analytics",
-        "Data Warehouse and Data Mining",  # ADDED
+        "Data Warehouse and Data Mining"
     ],
     4: [
         "Cyber Security",
@@ -85,23 +91,18 @@ SEMESTERS = {
 }
 
 # -----------------------
-# Helpers
+# DB INIT (RUN ONCE)
 # -----------------------
 def ensure_subject_rows():
-    """Ensure every subject exists in DB once with correct semester mapping."""
-    existing_subjects = set()
     for sem, subjects in SEMESTERS.items():
         for subj in subjects:
             row = Document.query.filter_by(subject=subj).first()
             if not row:
                 db.session.add(Document(semester=sem, subject=subj))
             else:
-                # keep semester in sync if it changed
                 if row.semester != sem:
                     row.semester = sem
-            existing_subjects.add(subj)
     db.session.commit()
-    # Note: we do NOT delete rows for subjects removed from mapping, to keep any PDFs safe.
 
 # -----------------------
 # Routes
@@ -113,18 +114,18 @@ def landing():
         email = request.form.get("email", "").strip()
 
         if not name:
-            flash("Please enter your name.", "error")
+            flash("Please enter your name", "error")
             return redirect(url_for("landing"))
 
         if not valid_domain_mail(email):
-            flash(f"Enter a valid institute email ending with {ALLOWED_DOMAIN} (or admin email).", "error")
+            flash("Enter valid institute email", "error")
             return redirect(url_for("landing"))
 
-        # Save minimal session
         session["user_name"] = name
         session["user_email"] = email
 
         return redirect(url_for("welcome"))
+
     return render_template("login.html", allowed_domain=ALLOWED_DOMAIN)
 
 @app.route("/welcome")
@@ -132,90 +133,100 @@ def welcome():
     name = session.get("user_name")
     if not name:
         return redirect(url_for("landing"))
-    return render_template("welcome.html", name=name, semesters=sorted(SEMESTERS.keys()), is_admin=is_admin())
+
+    return render_template(
+        "welcome.html",
+        name=name,
+        semesters=sorted(SEMESTERS.keys()),
+        is_admin=is_admin()
+    )
 
 @app.route("/semester/<int:sem_id>")
-def semester_page(sem_id: int):
+def semester_page(sem_id):
     name = session.get("user_name")
     if not name:
         return redirect(url_for("landing"))
+
     if sem_id not in SEMESTERS:
         abort(404)
-    ensure_subject_rows()
-    docs = Document.query.filter_by(semester=sem_id).order_by(Document.subject.asc()).all()
-    return render_template("subjects.html", sem=sem_id, docs=docs, name=name, is_admin=is_admin())
+
+    docs = Document.query.filter_by(semester=sem_id)\
+                         .order_by(Document.subject.asc())\
+                         .all()
+
+    return render_template(
+        "subjects.html",
+        sem=sem_id,
+        docs=docs,
+        name=name,
+        is_admin=is_admin()
+    )
 
 @app.route("/download/<int:doc_id>")
-def download(doc_id: int):
+def download(doc_id):
     if not session.get("user_name"):
         return redirect(url_for("landing"))
 
     doc = Document.query.get_or_404(doc_id)
+
     if not doc.has_pdf():
-        flash("PDF not uploaded for this subject yet.", "error")
+        flash("PDF not uploaded yet", "error")
         return redirect(url_for("semester_page", sem_id=doc.semester))
 
     return send_file(
         io.BytesIO(doc.data),
-        mimetype=doc.mimetype or "application/pdf",
+        mimetype=doc.mimetype,
         as_attachment=True,
-        download_name=doc.filename or (doc.subject.replace(" ", "_") + ".pdf")
+        download_name=doc.filename or doc.subject.replace(" ", "_") + ".pdf"
     )
 
 @app.route("/manage", methods=["GET", "POST"])
 def manage():
-    """
-    Admin-only page to upload/update PDFs for each subject (stored in SQLite BLOB).
-    """
     if not session.get("user_name"):
         return redirect(url_for("landing"))
 
     if not is_admin():
-        flash("You are not authorized to access Manage. Admin only.", "error")
+        flash("Admin only access", "error")
         return redirect(url_for("welcome"))
-
-    ensure_subject_rows()
 
     if request.method == "POST":
         subject = request.form.get("subject")
         file = request.files.get("file")
+
         if not subject or not file:
-            flash("Choose a subject and a PDF file.", "error")
+            flash("Select subject & PDF", "error")
             return redirect(url_for("manage"))
+
         if not file.filename.lower().endswith(".pdf"):
-            flash("Only PDF files are allowed.", "error")
+            flash("Only PDF allowed", "error")
             return redirect(url_for("manage"))
 
         doc = Document.query.filter_by(subject=subject).first()
         if not doc:
-            flash("Subject not found.", "error")
+            flash("Subject not found", "error")
             return redirect(url_for("manage"))
 
         doc.filename = file.filename
         doc.data = file.read()
         doc.mimetype = "application/pdf"
         db.session.commit()
-        flash(f"Uploaded PDF for '{subject}'.", "success")
+
+        flash("PDF uploaded successfully", "success")
         return redirect(url_for("manage"))
 
-    # Group docs by semester for tidy UI
     grouped = []
     for sem in sorted(SEMESTERS.keys()):
-        docs = Document.query.filter_by(semester=sem).order_by(Document.subject.asc()).all()
+        docs = Document.query.filter_by(semester=sem).order_by(Document.subject).all()
         grouped.append((sem, docs))
 
     return render_template("manage.html", grouped=grouped, is_admin=True)
 
-# CLI helper to init DB once
-@app.cli.command("initdb")
-def initdb():
-    """flask initdb"""
+# -----------------------
+# App Startup
+# -----------------------
+with app.app_context():
     db.create_all()
     ensure_subject_rows()
-    print("Database initialized & subjects ensured.")
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        ensure_subject_rows()
     app.run(debug=True)
